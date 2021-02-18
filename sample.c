@@ -5,6 +5,7 @@ int foo(int a,int b,int c) {
   
   if (a < 0) return 1;
   x = b + bar(a-1,b,c/2);
+  println("Hello");
   return x;
 }
 //追記
