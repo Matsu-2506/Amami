@@ -6,16 +6,16 @@ class MainWindow{
     JFrame frame = new JFrame();
     frame.setTitle("DrawToolWindow");
 
-    //Windowã®é€æ˜åŒ– ã§ããªã„?
+    //Window‚Ì“§–¾‰» ‚Å‚«‚È‚¢?
     //JPanel panel = new JPanel();
     //panel.setOpaque(false);
-    //ãƒŸãƒ¼ãƒ†ã‚£ãƒ³ã‚°ã‚¢ãƒ—ãƒªwindowã®ä½ç½®ã‚’å–å¾—
+    //ƒ~[ƒeƒBƒ“ƒOƒAƒvƒŠwindow‚ÌˆÊ’u‚ğæ“¾
 
-    //windowã®ã‚µã‚¤ã‚ºã€ä½ç½®ã®è¨­å®š
+    //window‚ÌƒTƒCƒYAˆÊ’u‚Ìİ’è
     frame.setSize(600, 400);
     //frame.setLocation(100, 100);
 
-    //windowã®è¡¨ç¤º
+    //window‚Ì•\¦
     frame.setVisible(true);
   }
 }
