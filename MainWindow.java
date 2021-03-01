@@ -12,10 +12,11 @@ class MainWindow{
     //ミーティングアプリwindowの位置を取得
 
     //windowのサイズ、位置の設定
-    frame.setSize(600, 400);
+    //frame.setSize(600, 400);
     //frame.setLocation(100, 100);
 
     //windowの表示
-    frame.setVisible(true);
+    //frame.setVisible(true);
+    CaptureAndDraw cad = new CaptureAndDraw();
   }
 }
