@@ -1,3 +1,5 @@
+package Writing;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -95,7 +97,7 @@ public class Writing{
       
       addMouseListener(this);
       addMouseMotionListener(this);
-      //setSize(600, 400);
+      setSize(600, 400);
     
       // Canvas Color
       setBackground(Color.white);
@@ -170,7 +172,7 @@ public class Writing{
           type = 1;
       }
       if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
-          // center button click
+          // center button
       }
       if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
           // right button click / eraser
@@ -217,58 +219,58 @@ public class Writing{
     @Override
     public void mouseExited(MouseEvent e) {
     }
-  }
 
 
-  //clear button
-  static class ClearListener implements ActionListener {
+    //clear button
+    static class ClearListener implements ActionListener {
 
-    PaintCanvas canvas;
+      PaintCanvas canvas;
 
-    public ClearListener(PaintCanvas canvas) {
-      super();
-      this.canvas = canvas;
+      public ClearListener(PaintCanvas canvas) {
+        super();
+        this.canvas = canvas;
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        canvas.clear();
+      }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      canvas.clear();
-    }
-  }
+    // slider
+    static class SliderListener implements ChangeListener {
 
-  // slider
-  static class SliderListener implements ChangeListener {
+      PaintCanvas canvas;
 
-    PaintCanvas canvas;
-    
-    public SliderListener(PaintCanvas canvas) {
-      super();
-      this.canvas = canvas;
-    }
+      public SliderListener(PaintCanvas canvas) {
+        super();
+        this.canvas = canvas;
+      }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-      JSlider source = (JSlider) e.getSource();
-      int fps = (int) source.getValue();
-      canvas.setStroke(fps);
-    }
-  }
-
-  // combo box
-  static class ComboListener implements ActionListener {
-
-    PaintCanvas canvas;
-
-    public ComboListener(PaintCanvas canvas) {
-      super();
-      this.canvas = canvas;
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        JSlider source = (JSlider) e.getSource();
+        int fps = (int) source.getValue();
+        canvas.setStroke(fps);
+      }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      JComboBox source = (JComboBox) e.getSource();
-      String color = (String) source.getSelectedItem();
-      canvas.setColorCombo(color);
+    // combo box
+    static class ComboListener implements ActionListener {
+
+      PaintCanvas canvas;
+
+      public ComboListener(PaintCanvas canvas) {
+        super();
+        this.canvas = canvas;
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        JComboBox source = (JComboBox) e.getSource();
+        String color = (String) source.getSelectedItem();
+        canvas.setColorCombo(color);
+      }
     }
   }
 }
