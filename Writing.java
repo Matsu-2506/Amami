@@ -21,33 +21,36 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
-public class Writing{
+import java.awt.AlphaComposite;
+
+public class Writing {
   static int w = 600;
   static int h = 400;
 
-  public static void main(String args[]){
-    JFrame frame = new JFrame();
+  public static void main(String args[]) {
+    JFrame frame = new WindowRerefaction();
     frame.setTitle("DrawToolWindow");
     // Close the window and exit the program
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     // JPanel panel = new JPanel();
     // panel.setOpaque(false)
 
     // size,position
-    frame.setSize(600, 400);
+    // frame.setSize(600, 400);
     // frame.setLocation(100, 100);
 
     PaintCanvas canvas = new PaintCanvas();
     // add frame
     JPanel pane = new JPanel();
+    pane.setOpaque(false);
     frame.getContentPane().add(pane, BorderLayout.CENTER);
     JPanel paneB = new JPanel();
+    paneB.setOpaque(false);
     frame.getContentPane().add(paneB, BorderLayout.NORTH);
 
     canvas.setPreferredSize(new Dimension(w, h));
     pane.add(canvas);
-
 
     /* Additional Features */
     // complete elimination
@@ -56,7 +59,7 @@ public class Writing{
     paneB.add(clear);
 
     // line thickness
-    JSlider slider = new JSlider(1, 50, 1); 
+    JSlider slider = new JSlider(1, 50, 1);
     slider.addChangeListener(new SliderListener(canvas));
     paneB.add(slider);
 
@@ -66,7 +69,6 @@ public class Writing{
     combo.addActionListener(new ComboListener(canvas));
     paneB.add(combo);
 
-
     // Show Window
     frame.setVisible(true);
   }
@@ -75,8 +77,8 @@ public class Writing{
     // retain the contents of the drawing
     private BufferedImage cImage = null;
     // Instances for drawing in cImage
-    private Graphics2D g2d;  
-    
+    private Graphics2D g2d;
+
     private int x, y, xx, yy;
 
     // mode selection / drawing or eraser
@@ -92,18 +94,23 @@ public class Writing{
       xx = -1;
       yy = -1;
       type = 0;
-      
+
       addMouseListener(this);
       addMouseMotionListener(this);
-      //setSize(600, 400);
-    
+      // setSize(600, 400);
+
       // Canvas Color
-      setBackground(Color.white);
+      setOpaque(false);
+      setBackground(Color.WHITE);
 
       // make BufferedImage
-      cImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+      cImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
       g2d = (Graphics2D) cImage.getGraphics();
-      g2d.setColor(Color.WHITE);
+      // g2d.setColor(Color.WHITE);
+      g2d.setColor(new Color(0,0,0,0));
+      AlphaComposite omposite;// イメージを合成（composite）する指定を行うクラス
+      omposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F);
+      g2d.setComposite(omposite);// 合成情報を設定
       g2d.fillRect(0, 0, w, h);
 
       repaint();
@@ -111,7 +118,7 @@ public class Writing{
 
     // Clear Canvas
     public void clear() {
-      g2d.setColor(Color.WHITE);
+      g2d.setColor(Color.white);
       g2d.fillRect(0, 0, w, h);
       repaint();
     }
@@ -124,13 +131,13 @@ public class Writing{
     // line color
     public void setColorCombo(String color) {
       if (color.equals("BLACK")) {
-          c = Color.black;
+        c = Color.black;
       } else if (color.equals("RED")) {
-          c = Color.red;
+        c = Color.red;
       } else if (color.equals("BLUE")) {
-          c = Color.blue;
+        c = Color.blue;
       } else if (color.equals("GREEN")) {
-          c = Color.green;
+        c = Color.green;
       }
     }
 
@@ -139,18 +146,16 @@ public class Writing{
       // drawing mode
       if (type == 1) {
         if (x >= 0 && y >= 0 && xx >= 0 && yy >= 0) {
-          BasicStroke stroke = new BasicStroke(width,
-              BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+          BasicStroke stroke = new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
           g2d.setStroke(stroke);
           g2d.setColor(c);
           g2d.drawLine(xx, yy, x, y);
         }
-          
-      // eraser mode
+
+        // eraser mode
       } else if (type == 2) {
         if (x >= 0 && y >= 0 && xx >= 0 && yy >= 0) {
-          BasicStroke stroke = new BasicStroke(50.0f,
-              BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+          BasicStroke stroke = new BasicStroke(50.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
           g2d.setStroke(stroke);
           g2d.setColor(Color.white);
           g2d.drawLine(xx, yy, x, y);
@@ -161,20 +166,19 @@ public class Writing{
       g.drawImage(cImage, 0, 0, null);
     }
 
-
     @Override
     public void mouseDragged(MouseEvent e) {
       // Detects pressed buttons
       if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-          // left button click / drowing
-          type = 1;
+        // left button click / drowing
+        type = 1;
       }
       if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
-          // center button click
+        // center button click
       }
       if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
-          // right button click / eraser
-          type = 2;
+        // right button click / eraser
+        type = 2;
       }
       xx = x;
       yy = y;
@@ -219,8 +223,7 @@ public class Writing{
     }
   }
 
-
-  //clear button
+  // clear button
   static class ClearListener implements ActionListener {
 
     PaintCanvas canvas;
@@ -240,7 +243,7 @@ public class Writing{
   static class SliderListener implements ChangeListener {
 
     PaintCanvas canvas;
-    
+
     public SliderListener(PaintCanvas canvas) {
       super();
       this.canvas = canvas;
