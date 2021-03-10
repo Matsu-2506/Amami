@@ -17,9 +17,9 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JRootPane;
 
-public class WindowRerefaction extends JFrame implements KeyListener {
+public class WindowRerefaction extends JFrame implements KeyListener{
 
-	static Point mouseDownCompCoords = null;
+	public static Point mouseDownCompCoords = null;
 
 	public WindowRerefaction(){
 
@@ -34,7 +34,9 @@ public class WindowRerefaction extends JFrame implements KeyListener {
 		getRootPane().setWindowDecorationStyle(JRootPane.NONE);
 
 		// getContentPane().setBackground( new Color(0,0,255,0) );
-        setBounds(500,200,400,400);
+        setBounds(200,200,800,600);
+
+		addKeyListener(this);
 
 
 		//キャンバス機能
@@ -70,10 +72,7 @@ public class WindowRerefaction extends JFrame implements KeyListener {
         //     }
         // });
 
-		//キー入力の有効化
-		addKeyListener(this);
-
-		setVisible(true);
+		// setVisible(true);
     }
 
 

@@ -6,6 +6,9 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -23,30 +26,30 @@ import java.awt.image.BufferedImage;
 
 import java.awt.AlphaComposite;
 
-public class Writing {
-  static int w = 600;
-  static int h = 400;
+public class Writing extends JFrame implements KeyListener{
+  static int w;
+  static int h;
+  static WindowRerefaction frame = new WindowRerefaction();
 
-  public static void main(String args[]) {
-    JFrame frame = new WindowRerefaction();
+  public Writing() {
+    // JFrame frame = new WindowRerefaction();
     frame.setTitle("DrawToolWindow");
+
     // Close the window and exit the program
     // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    WindowCapture wc = new WindowCapture();
+    wc.readPositionFromComponent(frame);
+    w = wc.getWidthFromComponent(frame);
+    h = wc.getHeightFromComponent(frame);
 
-    // JPanel panel = new JPanel();
-    // panel.setOpaque(false)
-
-    // size,position
-    // frame.setSize(600, 400);
-    // frame.setLocation(100, 100);
 
     PaintCanvas canvas = new PaintCanvas();
     // add frame
     JPanel pane = new JPanel();
     pane.setOpaque(false);
     frame.getContentPane().add(pane, BorderLayout.CENTER);
+
     JPanel paneB = new JPanel();
-    paneB.setOpaque(false);
     frame.getContentPane().add(paneB, BorderLayout.NORTH);
 
     canvas.setPreferredSize(new Dimension(w, h));
@@ -55,22 +58,54 @@ public class Writing {
     /* Additional Features */
     // complete elimination
     JButton clear = new JButton("CLEAR");
-    clear.addActionListener(new ClearListener(canvas));
     paneB.add(clear);
 
     // line thickness
     JSlider slider = new JSlider(1, 50, 1);
-    slider.addChangeListener(new SliderListener(canvas));
     paneB.add(slider);
 
     // line color
     String[] combodata = { "BLACK", "RED", "BLUE", "GREEN" };
     JComboBox combo = new JComboBox(combodata);
-    combo.addActionListener(new ComboListener(canvas));
     paneB.add(combo);
 
     // Show Window
     frame.setVisible(true);
+
+
+
+    //リスナーの設定
+    clear.addActionListener(new ClearListener(canvas));
+    slider.addChangeListener(new SliderListener(canvas));
+    combo.addActionListener(new ComboListener(canvas));
+    paneB.addMouseListener(new MouseListener(){
+      public void mouseReleased(MouseEvent e) {
+          WindowRerefaction.mouseDownCompCoords = null;
+      }
+      public void mousePressed(MouseEvent e) {
+          WindowRerefaction.mouseDownCompCoords = e.getPoint();
+      }
+      public void mouseExited(MouseEvent e) {
+      }
+      public void mouseEntered(MouseEvent e) {
+      }
+      public void mouseClicked(MouseEvent e) {
+      }
+    });
+
+    paneB.addMouseMotionListener(new MouseMotionListener(){
+        public void mouseMoved(MouseEvent e) {
+        }
+
+        public void mouseDragged(MouseEvent e) {
+          Point currCoords = e.getLocationOnScreen();
+          frame.setLocation(currCoords.x - WindowRerefaction.mouseDownCompCoords.x, currCoords.y - WindowRerefaction.mouseDownCompCoords.y);
+        }
+    });
+    addKeyListener(this);
+    setFocusable(true);
+
+    frame.requestFocusInWindow();
   }
 
   static class PaintCanvas extends JPanel implements MouseListener, MouseMotionListener {
@@ -101,7 +136,7 @@ public class Writing {
 
       // Canvas Color
       setOpaque(false);
-      setBackground(Color.WHITE);
+      // setBackground(Color.WHITE);
 
       // make BufferedImage
       cImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -113,12 +148,13 @@ public class Writing {
       g2d.setComposite(omposite);// 合成情報を設定
       g2d.fillRect(0, 0, w, h);
 
+
       repaint();
     }
 
     // Clear Canvas
     public void clear() {
-      g2d.setColor(Color.white);
+      g2d.setColor(new Color(0,0,0,0));
       g2d.fillRect(0, 0, w, h);
       repaint();
     }
@@ -274,4 +310,27 @@ public class Writing {
       canvas.setColorCombo(color);
     }
   }
+
+
+  //ScreenShot
+  @Override
+	public void keyTyped(KeyEvent e) {
+		//使用しないので空にしておきます。
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			WindowCapture wc = new WindowCapture(frame);			
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		
+		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			// do nothing
+		}
+	}
 }

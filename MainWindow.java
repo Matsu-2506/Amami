@@ -1,16 +1,7 @@
-import java.awt.Color;
-import java.awt.Dimension;
+
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.GraphicsDevice;
-
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 class MainWindow {
   public static void main(String args[]) {
@@ -20,8 +11,11 @@ class MainWindow {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				WindowRerefaction t = new WindowRerefaction();
-				// t.setVisible(true);
+				WindowRerefaction wr = new WindowRerefaction();
+				wr.setVisible(true);
+
+
+        // Writing write = new Writing();
 				
 			}
 		});
