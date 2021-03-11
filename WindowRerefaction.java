@@ -38,15 +38,6 @@ public class WindowRerefaction extends JFrame implements KeyListener{
 
 		addKeyListener(this);
 
-
-		//キャンバス機能
-		// WindowCapture wc = new WindowCapture();
-		// wc.readPositionFromComponent(this);
-		// int w = wc.getWidthFromComponent(wc);
-		// PaintCanvas canvas = new PaintCanvas();
-		// this.add(canvas);
-
-
 		// addMouseListener(new MouseListener(){
         //     public void mouseReleased(MouseEvent e) {
         //         mouseDownCompCoords = null;

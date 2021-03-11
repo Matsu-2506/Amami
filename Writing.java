@@ -157,6 +157,7 @@ public class Writing extends JFrame implements KeyListener{
       g2d.setColor(new Color(0,0,0,0));
       g2d.fillRect(0, 0, w, h);
       repaint();
+      frame.requestFocusInWindow();
     }
 
     // line thickness
@@ -175,6 +176,7 @@ public class Writing extends JFrame implements KeyListener{
       } else if (color.equals("GREEN")) {
         c = Color.green;
       }
+      frame.requestFocusInWindow();
     }
 
     // mode selection / drawing or eraser
@@ -267,6 +269,7 @@ public class Writing extends JFrame implements KeyListener{
     public ClearListener(PaintCanvas canvas) {
       super();
       this.canvas = canvas;
+      frame.requestFocusInWindow();
     }
 
     @Override
@@ -283,6 +286,8 @@ public class Writing extends JFrame implements KeyListener{
     public SliderListener(PaintCanvas canvas) {
       super();
       this.canvas = canvas;
+
+      frame.requestFocusInWindow();
     }
 
     @Override
@@ -290,6 +295,7 @@ public class Writing extends JFrame implements KeyListener{
       JSlider source = (JSlider) e.getSource();
       int fps = (int) source.getValue();
       canvas.setStroke(fps);
+      frame.requestFocusInWindow();
     }
   }
 
@@ -301,6 +307,7 @@ public class Writing extends JFrame implements KeyListener{
     public ComboListener(PaintCanvas canvas) {
       super();
       this.canvas = canvas;
+      frame.requestFocusInWindow();
     }
 
     @Override
@@ -308,6 +315,7 @@ public class Writing extends JFrame implements KeyListener{
       JComboBox source = (JComboBox) e.getSource();
       String color = (String) source.getSelectedItem();
       canvas.setColorCombo(color);
+      frame.requestFocusInWindow();
     }
   }
 
