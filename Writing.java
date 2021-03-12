@@ -2,6 +2,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -11,6 +12,7 @@ import java.awt.event.KeyListener;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -23,30 +25,35 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
-
 import java.awt.AlphaComposite;
-
 
 public class Writing extends JFrame implements KeyListener{
   static int w;
   static int h;
   static WindowRerefaction frame = new WindowRerefaction();
+  static PaintCanvas canvas;
+
+  static JPanel pane;
+
+  static JTextField textW;
+  static JTextField textH;
 
   public Writing() {
     // JFrame frame = new WindowRerefaction();
     frame.setTitle("DrawToolWindow");
 
     // Close the window and exit the program
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     WindowCapture wc = new WindowCapture();
     wc.readPositionFromComponent(frame);
     w = wc.getWidthFromComponent(frame);
     h = wc.getHeightFromComponent(frame);
 
 
-    PaintCanvas canvas = new PaintCanvas();
+    canvas = new PaintCanvas();
     // add frame
-    JPanel pane = new JPanel();
+    // JPanel pane = new JPanel();
+    pane = new JPanel();
     pane.setOpaque(false);
     frame.getContentPane().add(pane, BorderLayout.CENTER);
 
@@ -65,20 +72,30 @@ public class Writing extends JFrame implements KeyListener{
     JSlider slider = new JSlider(1, 50, 1);
     paneB.add(slider);
 
+
+  
     // line color
     String[] combodata = { "BLACK", "RED", "BLUE", "GREEN" };
     JComboBox combo = new JComboBox(combodata);
     paneB.add(combo);
 
+
+    textW = new JTextField(10);
+    textH = new JTextField(10);
+    JButton btnSize = new JButton("適用");
+
+    paneB.add(textW);
+    paneB.add(textH);
+    paneB.add(btnSize);
+
     // Show Window
     frame.setVisible(true);
-
-  
 
 
     clear.addActionListener(new ClearListener(canvas));
     slider.addChangeListener(new SliderListener(canvas));
     combo.addActionListener(new ComboListener(canvas));
+    btnSize.addActionListener(new SizeListener(canvas));
     paneB.addMouseListener(new MouseListener(){
       public void mouseReleased(MouseEvent e) {
           WindowRerefaction.mouseDownCompCoords = null;
@@ -104,19 +121,17 @@ public class Writing extends JFrame implements KeyListener{
         }
     });
     addKeyListener(this);
-    setFocusable(true);
+
+    // setFocusable(true);
 
     frame.requestFocusInWindow();
   }
 
-
   static class PaintCanvas extends JPanel implements MouseListener, MouseMotionListener {
     // retain the contents of the drawing
     private BufferedImage cImage = null;
-    private BufferedImage subimage = null;
     // Instances for drawing in cImage
     private Graphics2D g2d;
-    private Graphics2D sub_g2d;
 
     private int x, y, xx, yy;
 
@@ -138,8 +153,6 @@ public class Writing extends JFrame implements KeyListener{
       addMouseMotionListener(this);
       // setSize(600, 400);
 
-
-
       // Canvas Color
       setOpaque(false);
       // setBackground(Color.WHITE);
@@ -152,16 +165,18 @@ public class Writing extends JFrame implements KeyListener{
       AlphaComposite omposite;
       omposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F);
       g2d.setComposite(omposite);
-      g2d.fillRect(0, 0, w, h);      
+      g2d.fillRect(0, 0, w, h);
+
 
       repaint();
     }
 
     // Clear Canvas
     public void clear() {
+      cImage = null;      
+    }
 
-      cImage = null;
-
+    public void makeBuffImg(){
       cImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
       g2d = (Graphics2D) cImage.getGraphics();
       g2d.setColor(new Color(0,0,0,0));
@@ -190,6 +205,7 @@ public class Writing extends JFrame implements KeyListener{
       } else if (color.equals("GREEN")) {
         c = Color.green;
       }
+      frame.requestFocusInWindow();
     }
 
     // mode selection / drawing or eraser
@@ -274,6 +290,41 @@ public class Writing extends JFrame implements KeyListener{
     }
   }
 
+  static class SizeListener implements ActionListener {
+    PaintCanvas canvas;
+    public SizeListener(PaintCanvas canvas) {
+      super();
+      
+      this.canvas = canvas;
+      
+      frame.requestFocusInWindow();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      
+        int windowWidth = Integer.parseInt(textW.getText());
+        int windowHeight = Integer.parseInt(textW.getText());
+        frame.setDefaultLookAndFeelDecorated(true);
+        frame.setSize(windowWidth, windowHeight);
+        
+        frame.repaint();
+
+        frame.getContentPane().add(pane, BorderLayout.CENTER);
+
+        WindowCapture wc = new WindowCapture();
+        wc.readPositionFromComponent(frame);
+        w = wc.getWidthFromComponent(frame);
+        h = wc.getHeightFromComponent(frame);
+        canvas.setPreferredSize(new Dimension(w, h));
+        pane.add(canvas);
+
+        canvas.makeBuffImg();
+
+        frame.requestFocusInWindow();
+    }
+  }
+
   // clear button
   static class ClearListener implements ActionListener {
 
@@ -282,11 +333,14 @@ public class Writing extends JFrame implements KeyListener{
     public ClearListener(PaintCanvas canvas) {
       super();
       this.canvas = canvas;
+      frame.requestFocusInWindow();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
       canvas.clear();
+      canvas.makeBuffImg();
+      frame.requestFocusInWindow();
     }
   }
 
@@ -298,6 +352,7 @@ public class Writing extends JFrame implements KeyListener{
     public SliderListener(PaintCanvas canvas) {
       super();
       this.canvas = canvas;
+      frame.requestFocusInWindow();
     }
 
     @Override
@@ -305,6 +360,8 @@ public class Writing extends JFrame implements KeyListener{
       JSlider source = (JSlider) e.getSource();
       int fps = (int) source.getValue();
       canvas.setStroke(fps);
+      canvas.setPreferredSize(new Dimension(w, h));
+      frame.requestFocusInWindow();
     }
   }
 
@@ -316,6 +373,7 @@ public class Writing extends JFrame implements KeyListener{
     public ComboListener(PaintCanvas canvas) {
       super();
       this.canvas = canvas;
+      frame.requestFocusInWindow();
     }
 
     @Override
@@ -323,6 +381,7 @@ public class Writing extends JFrame implements KeyListener{
       JComboBox source = (JComboBox) e.getSource();
       String color = (String) source.getSelectedItem();
       canvas.setColorCombo(color);
+      frame.requestFocusInWindow();
     }
   }
 
