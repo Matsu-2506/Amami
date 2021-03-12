@@ -39,7 +39,7 @@ public class WindowCapture {
             // 以下、出力処理
             // String dirName = "../images";
             String fileName = "test_" + format.format(new Date()) + ".jpg";
-            ImageIO.write(image, "jpg", new File(fileName));
+            ImageIO.write(image, "jpg", new File("./MyNotebook/"+fileName));
 
         } catch (AWTException e) {
             e.printStackTrace();
