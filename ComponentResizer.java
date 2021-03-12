@@ -4,6 +4,7 @@ import java.util.*;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+
 /**
  *  The ComponentResizer allows you to resize a component by dragging a border
  *  of the component.
