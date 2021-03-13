@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 
 
 class MainWindow {
-  public static void main(String args[]) {
+  public MainWindow() {
 
     // OSのウィンドウ装飾を無くして、Look&Feelの装飾にしておきます。
 		JFrame.setDefaultLookAndFeelDecorated(true);
